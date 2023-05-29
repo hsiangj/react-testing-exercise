@@ -2,16 +2,16 @@ import React from "react";
 import { render, fireEvent } from "@testing-library/react";
 import Carousel from "./Carousel";
 
-//smoke test
+// smoke test
 it('renders without crashing', () => {
   render(<Carousel />);
-})
+});
 
-//snapshot test
+// snapshot test
 it('matches snapshot', () => {
   const {asFragment} = render(<Carousel />)
   expect(asFragment()).toMatchSnapshot();
-})
+});
 
 it('works when you click on the left arrow', () => {
   // move backward in the carousel from second image to first image
@@ -26,6 +26,27 @@ it('works when you click on the left arrow', () => {
   const caption2 = queryByText('Photo by Pratik Patel on Unsplash');
   expect(caption1).toBeInTheDocument();
   expect(caption2).not.toBeInTheDocument();
+
+});
+
+it('hides and shows arrows on first/last image', () => {
+  const { getByTestId } = render(<Carousel />);
+  const leftArrow = getByTestId('left-arrow');
+  const rightArrow = getByTestId("right-arrow");
+
+  // expect first image left arrow to be hidden
+  expect(leftArrow).toHaveClass('hidden');
+  expect(rightArrow).not.toHaveClass('hidden');
+
+  // expect second image both arrows to be shown
+  fireEvent.click(rightArrow);
+  expect(leftArrow).not.toHaveClass('hidden');
+  expect(rightArrow).not.toHaveClass('hidden');
+
+  // expect third image right arrow to be hiddne
+  fireEvent.click(rightArrow);
+  expect(leftArrow).not.toHaveClass('hidden');
+  expect(rightArrow).toHaveClass('hidden');
 
 })
 
